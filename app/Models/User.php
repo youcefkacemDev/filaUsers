@@ -15,6 +15,14 @@ class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
 
+    // public function canAccessPanel(Panel $panel): bool
+    // {
+    //     return true;
+    // }
+    // public function canAccessPanel(Panel $panel): bool
+    // {
+    //     return false;
+    // }
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_admin;
