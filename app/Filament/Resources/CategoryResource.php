@@ -4,23 +4,25 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use Filament\Forms\Set;
 use App\Models\Category;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Filament\Facades\Filament;
 use Filament\Resources\Resource;
+use League\Flysystem\Visibility;
+use Filament\Forms\Components\Hidden;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Count;
 use App\Filament\Resources\CategoryResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Filament\Resources\CategoryResource\RelationManagers\CommentsRelationManager;
 use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManager;
-use Filament\Forms\Components\Hidden;
-use Filament\Tables\Columns\Summarizers\Count;
-use Filament\Tables\Columns\Summarizers\Sum;
-use League\Flysystem\Visibility;
+use App\Filament\Resources\CategoryResource\RelationManagers\CommentsRelationManager;
 
 class CategoryResource extends Resource
 {
@@ -35,7 +37,19 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
+                TextInput::make('name')
+                    ->live(debounce: 1000)
+                    ->afterStateUpdated(
+                        function (string $operation, string $state, Set $set)
+                        {
+                            if($operation === 'edit')
+                            {
+                                return ;
+                            }
+                            $set('slog', Str::slug($state, '_'));
+                        }
+                    )
+                    ->required(),
                 TextInput::make('slog'),
                 Hidden::make('user_id')
                     ->default(Filament::auth()->id()),
