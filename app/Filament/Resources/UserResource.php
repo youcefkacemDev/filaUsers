@@ -21,6 +21,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
+use function GuzzleHttp\default_ca_bundle;
 use function Laravel\Prompts\select;
 
 class UserResource extends Resource
@@ -53,7 +54,27 @@ class UserResource extends Resource
                 TextColumn::make('email'),
                 TextColumn::make('posts_count')->counts('posts'),
                 TextColumn::make('categories_count')->counts('categories'),
-                TextColumn::make('is_admin'),
+                TextColumn::make('is_admin')
+                    ->label('Role')
+                    ->badge()
+                    ->color(
+                        function(string $state) : string
+                        {
+                            return match($state){
+                                "1" => "success",
+                                "0" => "info",
+                            };
+                        }
+                    )
+                    ->formatStateUsing(
+                        function (string $state): string {
+                            if ($state) {
+                                return "ADMIN";
+                            } else {
+                                return "USER";
+                            }
+                        }
+                    ),
             ])
             ->filters([
                 TernaryFilter::make('is_admin')

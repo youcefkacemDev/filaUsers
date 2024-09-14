@@ -49,7 +49,7 @@ class CategoryResource extends Resource
                 TextColumn::make('name'),
                 TextColumn::make('slog'),
                 TextColumn::make('user.email')->label('created by'),
-                TextColumn::make('posts_count')->counts('posts'),
+                TextColumn::make('posts_count')->counts('posts')->label('posts'),
                 TextColumn::make('created_at')->label('craeted')->date('d M Y'),
             ])
             ->filters([
