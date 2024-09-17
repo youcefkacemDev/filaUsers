@@ -90,6 +90,7 @@ class PostResource extends Resource
                                 ->disk('public')
                                 ->directory('thumbnail'),
                             Radio::make('publish')
+                                ->default(1)
                                 ->boolean()
                                 ->inline(),
                             Select::make('categories')
