@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Filament\Resources\UserResource\Widgets\UserStatWidget;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 // use Filament\Resources\Pages\ListRecords\Tab;
@@ -18,6 +19,18 @@ class ListUsers extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            UserStatWidget::class,
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [];
     }
 
     public function getTabs(): array

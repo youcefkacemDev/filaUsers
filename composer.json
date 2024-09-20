@@ -10,6 +10,7 @@
         "flowframe/laravel-trend": "^0.2.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "livewire/flux": "v1.0.0-beta.5",
         "ryangjchandler/blade-tabler-icons": "^2.3"
     },
     "require-dev": {
