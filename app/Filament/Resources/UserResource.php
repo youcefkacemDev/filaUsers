@@ -2,27 +2,32 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Filament\Resources\UserResource\RelationManagers\CategoriesRelationManager;
-use App\Filament\Resources\UserResource\RelationManagers\CommentsRelationManager;
-use App\Filament\Resources\UserResource\RelationManagers\PostsRelationManager;
-use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Models\User;
 use Filament\Tables;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-use function GuzzleHttp\default_ca_bundle;
+use Filament\Resources\Resource;
 use function Laravel\Prompts\select;
+use Filament\Forms\Components\Select;
+use App\Filament\Exports\UserExporter;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Tables\Filters\TernaryFilter;
+use function GuzzleHttp\default_ca_bundle;
+use App\Filament\Resources\UserResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\UserResource\RelationManagers;
+
+use App\Filament\Resources\UserResource\RelationManagers\PostsRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\CommentsRelationManager;
+use App\Filament\Resources\UserResource\RelationManagers\CategoriesRelationManager;
+use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Tables\Actions\RestoreBulkAction;
 
 class UserResource extends Resource
 {
@@ -91,10 +96,17 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->headerActions([
+                ExportAction::make()
+                    // ->formats([ExportFormat::Csv])
+                    ->exporter(UserExporter::class),
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()
+                    ->exporter(UserExporter::class),
             ]);
     }
 
